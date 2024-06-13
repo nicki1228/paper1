@@ -1,0 +1,91 @@
+%new index
+%clc
+%clear all
+%%
+clear Workspace;
+clc;
+pause(1);
+load('BIS.mat');
+[hdr, record] = edfread('chb24_21.edf');
+%a = 1;
+a = (2804-600)*256;
+b = a+719;
+Test(1,:)=record(1,a:b);
+Test(2,:)=record(2,a:b);
+Test(3,:)=record(3,a:b);
+Test(4,:)=record(4,a:b);
+Test(5,:)=record(5,a:b);
+Test(6,:)=record(6,a:b);
+Test(7,:)=record(7,a:b);
+Test(8,:)=record(8,a:b);
+Test(9,:)=record(9,a:b);
+Test(10,:)=record(10,a:b);
+Test(11,:)=record(11,a:b);
+Test(12,:)=record(12,a:b);
+Test(13,:)=record(13,a:b);
+Test(14,:)=record(14,a:b);
+Test(15,:)=record(15,a:b);
+Test(16,:)=record(16,a:b);
+Test(17,:)=record(17,a:b);
+Test(18,:)=record(18,a:b);
+Test(19,:)=record(19,a:b);
+Test(20,:)=record(20,a:b);
+Test(21,:)=record(21,a:b);
+Test(22,:)=record(22,a:b);
+Test(23,:)=record(23,a:b);
+%Test(24,:)=record(24,a:b);
+%Test(25,:)=record(25,a:b);
+%Test(26,:)=record(26,a:b);
+%Test(27,:)=record(27,a:b);
+%Test(28,:)=record(28,a:b);
+%Test(29,:)=record(29,a:b);
+%Test(30,:)=record(30,a:b);
+%Test(31,:)=record(31,a:b);
+%Test(32,:)=record(32,a:b);
+%Test(33,:)=record(33,a:b);
+%Test(34,:)=record(34,a:b);
+%Test(35,:)=record(35,a:b);
+%Test(36,:)=record(36,a:b);
+%Test(37,:)=record(37,a:b);
+%Test(38,:)=record(38,a:b);
+
+oo=23;              
+for Ntest=1:oo
+x=Test(Ntest,:).^1;
+B=BISCopy(1:540,:);
+BIS=B;
+
+sample_rate=4;
+%give up no mean data
+if length(BIS)*sample_rate<=length(x)
+BIS=BIS(1:length(BIS));
+x=x(1:sample_rate*length(BIS));
+else
+BIS=BIS(1:floor(length(x)/sample_rate));
+x=x(1:sample_rate*floor(length(x)/sample_rate));
+end
+
+%%
+unit_size=60;%60 means 60 second
+number_period=floor(length(BIS)/unit_size);
+value_length=unit_size*number_period;
+BIS=BIS(1:value_length);
+x=x(1:value_length*sample_rate);   
+
+%%
+xxx=[];
+for i=1:length(BIS)-unit_size+1
+xxx(i,:)=x((i-1)*sample_rate+1:(i-1)*sample_rate+unit_size*sample_rate);
+end
+%%
+%%%%FW
+ord=3;
+t=768;
+for i=1:length(BIS)-unit_size+1
+xxx1(i)=perm(xxx(i,:),ord,t);
+end
+% x3(Ntest,:)= p1;
+% x4(Ntest,:)= p2;
+x2(Ntest,:)= xxx1;
+save('D:\MATLAB\epilepsy prediction\Reduced_PE_values\chb24\PE21(1).mat','x2');
+end
